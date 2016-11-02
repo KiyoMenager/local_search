@@ -1,0 +1,2 @@
+defmodule LocalSearch do
+end
