@@ -9,10 +9,12 @@ defmodule Permutation do
   A circular permutation means the last element has for successor the first.
   """
 
+  alias Permutation.Node
+
   @typedoc """
 
   """
-  @type t :: []
+  @type t :: [Node.t]
   @type element :: any
   @type acc :: term
 
