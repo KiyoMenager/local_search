@@ -10,11 +10,18 @@ defmodule DistanceMatrix do
 
   """
 
+  alias DistanceMatrix.Localizable
+
+  @typedoc """
+  The element representing a distance.
+  """
   @type distance :: non_neg_integer
+
+  @typedoc """
+  A list of `Localizable` from which the distance matrix is build.
+  """
   @type route :: list(Localizable.t)
   @type t:: TupleMatrix.t(distance)
-
-  alias Localizable
 
   @doc """
   Creates a new `DistanceMatrix`  generating for
@@ -22,8 +29,9 @@ defmodule DistanceMatrix do
 
   ## Examples
 
-      iex> permutation = [Permutation.Node.new(1, 2), Permutation.Node.new(2, 4), Permutation.Node.new(3, 2)]
-      iex> DistanceMatrix.create(permutation)
+      iex> alias DistanceMatrix.Location
+      iex> route = [Location.new(1, 2), Location.new(2, 4), Location.new(3, 2)]
+      iex> DistanceMatrix.create(route)
       %TupleMatrix{tuple: {0, 3, 2, 3, 0, 3, 2, 3, 0}, nb_cols: 3, nb_rows: 3}
   """
   @spec create(route) :: t
@@ -40,8 +48,9 @@ defmodule DistanceMatrix do
 
   ## Examples
 
-      iex> permutation = [Permutation.Node.new(1, 2), Permutation.Node.new(2, 4), Permutation.Node.new(3, 2)]
-      iex> d_m = DistanceMatrix.create(permutation)
+      iex> alias DistanceMatrix.Location
+      iex> route = [Location.new(1, 2), Location.new(2, 4), Location.new(3, 2)]
+      iex> d_m = DistanceMatrix.create(route)
       iex> d_m |> DistanceMatrix.get(1, 2)
       3
   """
@@ -50,7 +59,7 @@ defmodule DistanceMatrix do
 
   # Returns a function that compute the distance between `node` located at `i`
   # and `j` in the given `permutation`.
-  
+
   @spec distance_producer(route) :: TupleMatrix.producer
 
   defp distance_producer(route) do

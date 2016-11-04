@@ -1,10 +1,4 @@
-defprotocol Localizable do
-
-  @doc "Returns the distance between `fst_node` and `sec_node`"
-  def distance(fst_node, sec_node)
-end
-
-defmodule Permutation.Node do
+defmodule LocalSearch.Node do
 
   defstruct [:x, :y]
   @type t :: %__MODULE__{x: float, y: float}
@@ -15,12 +9,11 @@ defmodule Permutation.Node do
   @spec new(float, float) :: t
 
   def new(x, y), do: %__MODULE__{x: x, y: y}
-
 end
 
 
-defimpl Localizable, for: Permutation.Node do
-  alias Permutation.Node
+defimpl DistanceMatrix.Localizable, for: LocalSearch.Node do
+  alias LocalSearch.Node
 
   @doc """
   Calculates the manathan distance between 2 nodes.

@@ -26,48 +26,31 @@ defmodule TwoOpt do
  combination that gave the best gain.
 
   """
-  @type solution :: list(Node.t)
+
+  @type encoded :: tuple
   @type edge :: {non_neg_integer, non_neg_integer}
   @type move :: {edge, edge}
-
-  @doc """
-
-  """
-  @spec call(solution) :: solution
-
-  def call(solution) do
-    distances_matrix = DistanceMatrix.create(solution)
-    solution
-    |> Problem.new
-    |> Problem.encoded_solution
-    |> run_algorithm(distances_matrix)
-  end
 
   @doc """
   Runs the 2opt optimisation algorithm.
 
   `encoded_sol` holds the encoded solution and `distances_matrix` holds the
   precomputed distances. see `Problem` and `DistanceMatrix`.
+
   """
-  defp run_algorithm(encoded_sol, distances_matrix) do
+  @spec run(encoded, DistanceMatrix.t) :: encoded
+
+  def run(encoded_sol, distances_matrix) do
     case encoded_sol |> two_opt(distances_matrix) do
       {:halt, encoded_sol} -> encoded_sol
-      {:cont, encoded_sol} -> encoded_sol |> run_algorithm(distances_matrix)
+      {:cont, encoded_sol} -> encoded_sol |> two_opt(distances_matrix)
     end
   end
 
-  @doc """
-      iex> permutation = [Permutation.Node.new(1, 2), Permutation.Node.new(2, 4), Permutation.Node.new(3, 2), Permutation.Node.new(4, 5)]
-      iex> problem = Problem.new(permutation)
-      iex> distances =  DistanceMatrix.new(permutation)
-      iex> TwoOpt.two_opt(problem, distances)
-      {:cont, [0, 1, 3, 2]}
-  """
-  @spec two_opt(tuple, DistanceMatrix.t) :: {term, tuple}
-
+  @spec two_opt(encoded, DistanceMatrix.t) :: {term, tuple}
   def two_opt(encoded_solution, distances) do
     size = tuple_size(encoded_solution)
-    {move, gain} =
+    {move, _} =
       0..(size - 1)
       |> Enum.reduce({nil, 0}, fn i_pred, {_, i_best_gain} = i_current_best ->
         {j_move, j_gain} =
@@ -131,7 +114,7 @@ defmodule TwoOpt do
 
   ## Examples
       iex> TwoOpt.apply_move({"a", "b", "c", "d", "e"}, {{0, 1}, {3, 4}})
-      ["a", "d", "c", "b", "e"]
+      {"a", "d", "c", "b", "e"}
 
   """
   @spec apply_move(Permutation.t, move) :: tuple

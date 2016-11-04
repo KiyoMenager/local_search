@@ -1,4 +1,4 @@
-defmodule Problem do
+defmodule Problem.Decoder do
   @moduledoc """
   A solution is a permutation of nodes.
   What maters is the order of the nodes in the permutation.
@@ -10,11 +10,13 @@ defmodule Problem do
   Note: to be decodable the given permutation must be in the interval
   [0..length(solution)[
 
-    iex> solution = ["node_1", "node_2", "node_3"]
-    iex> problem = solution |> Problem.new
-    iex> encoded_solution = problem |> Problem.encoded_solution
-    iex> problem |> Problem.decode(encoded_solution)
-    ["node_1", "node_2", "node_3"]
+    iex> alias Problem.Decoder
+    iex>
+    iex> solution = ["a", "b", "c"]
+    iex> decoder = solution |> Decoder.new
+    iex> encoded_solution = decoder |> Decoder.encoded_solution
+    iex> decoder |> Decoder.decode(encoded_solution)
+    ["a", "b", "c"]
 
   """
   defstruct [:ref_solution, :encoded_solution]
@@ -28,16 +30,18 @@ defmodule Problem do
   @type index :: non_neg_integer
 
   @doc """
-  Creates a new `problem` based on the given `solution`.
+  Creates a new `decoder` based on the given `solution`.
 
   Behind the scene, because the solution is only meant to be used as a simple
   reference for decoding, it is stored as a tuple for fast access.
 
   ## Examples
 
+      iex> alias Problem.Decoder
+      iex>
       iex> solution = ["node_1", "node_2", "node_3"]
-      iex> Problem.new(solution)
-      %Problem{
+      iex> Decoder.new(solution)
+      %Problem.Decoder{
         ref_solution: {"node_1", "node_2", "node_3"},
         encoded_solution: {0, 1, 2}
       }
@@ -54,7 +58,18 @@ defmodule Problem do
     }
   end
 
+  @doc """
+  Returns the encoded solution.
 
+  ## Examples
+
+      iex> alias Problem.Decoder
+      iex>
+      iex> decoder = Decoder.new(["a", "b", "c", "d"])
+      iex> Decoder.encoded_solution(decoder)
+      {0, 1, 2, 3}
+
+  """
   @spec encoded_solution(t) :: encoded_solution
 
   def encoded_solution(%__MODULE__{encoded_solution: solution}), do: solution
@@ -73,9 +88,9 @@ defmodule Problem do
   ## Examples
 
       iex> solution = ["node_1", "node_2", "node_3"]
-      iex> problem = Problem.new(solution)
+      iex> decoder = Decoder.new(solution)
       iex> reversed_encoded_solution = {2, 1, 0}
-      iex> problem |> Problem.decode(reversed_encoded_solution)
+      iex> decoder |> Decoder.decode(reversed_encoded_solution)
       ["node_3", "node_2", "node_1"]
 
   """
