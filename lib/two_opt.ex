@@ -36,7 +36,7 @@ defmodule TwoOpt do
   @spec call(solution) :: solution
 
   def call(solution) do
-    distances_matrix = DistanceMatrix.new(solution)
+    distances_matrix = DistanceMatrix.create(solution)
     solution
     |> Problem.new
     |> Problem.encoded_solution
@@ -116,10 +116,10 @@ defmodule TwoOpt do
     c = elem(encoded_solution, j_pred)
     d = elem(encoded_solution, j_succ)
 
-    ab = distances |> DistanceMatrix.at(a, b)
-    cd = distances |> DistanceMatrix.at(c, d)
-    ac = distances |> DistanceMatrix.at(a, c)
-    bd = distances |> DistanceMatrix.at(b, d)
+    ab = distances |> DistanceMatrix.get(a, b)
+    cd = distances |> DistanceMatrix.get(c, d)
+    ac = distances |> DistanceMatrix.get(a, c)
+    bd = distances |> DistanceMatrix.get(b, d)
 
     (ab + cd) - (ac + bd)
   end

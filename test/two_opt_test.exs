@@ -14,7 +14,7 @@ defmodule TwoOptTest do
 
   test "2-opt applied on a permutation of size < 4 has no effect" do
     permutation = [Permutation.Node.new(1, 2), Permutation.Node.new(2, 4), Permutation.Node.new(3, 2)]
-    distances =  DistanceMatrix.new(permutation)
+    distances =  DistanceMatrix.create(permutation)
 
     problem =
       permutation
