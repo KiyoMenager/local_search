@@ -13,8 +13,8 @@ defmodule TwoOptTest do
     route = [Node.new(1, 2), Node.new(2, 4), Node.new(3, 2)]
     decoder          = Decoder.new(route)
     distance_matrix  = DistanceMatrix.create(route)
-
-    {:ok, %{route: route, decoder: decoder, distance_matrix: distance_matrix}}
+    distance_callback = LocalSearch.distance_callback(distance_matrix)
+    {:ok, %{route: route, decoder: decoder, distance_callback: distance_callback}}
   end
 
 
@@ -25,9 +25,9 @@ defmodule TwoOptTest do
   end
 
   test "2-opt applied on a permutation of size < 4 has no effect",
-  %{route: route, decoder: decoder, distance_matrix: distance_matrix} do
+  %{route: route, decoder: decoder, distance_callback: distance_callback} do
     encoded_tour = decoder |> Decoder.encoded_solution
-    assert {:halt, solution} = TwoOpt.two_opt(encoded_tour, distance_matrix)
+    assert {:halt, solution} = TwoOpt.two_opt(encoded_tour, distance_callback)
     assert (decoder |> Decoder.decode(solution)) == route
   end
 

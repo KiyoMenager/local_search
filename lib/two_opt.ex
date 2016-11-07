@@ -28,6 +28,7 @@ defmodule TwoOpt do
   """
 
   @type encoded :: tuple
+  @type distance_callback :: (edge -> non_neg_integer)
   @type edge :: {non_neg_integer, non_neg_integer}
   @type move :: {edge, edge}
 
@@ -38,17 +39,17 @@ defmodule TwoOpt do
   precomputed distances. see `Problem` and `DistanceMatrix`.
 
   """
-  @spec run(encoded, DistanceMatrix.t) :: encoded
+  @spec run(encoded, distance_callback) :: encoded
 
-  def run(encoded_sol, distances_matrix) do
-    case encoded_sol |> two_opt(distances_matrix) do
+  def run(encoded_sol, distance_callback) do
+    case encoded_sol |> two_opt(distance_callback) do
       {:halt, encoded_sol} -> encoded_sol
-      {:cont, encoded_sol} -> encoded_sol |> two_opt(distances_matrix)
+      {:cont, encoded_sol} -> encoded_sol |> two_opt(distance_callback)
     end
   end
 
-  @spec two_opt(encoded, DistanceMatrix.t) :: {term, tuple}
-  def two_opt(encoded_solution, distances) do
+  @spec two_opt(encoded, distance_callback) :: {term, tuple}
+  def two_opt(encoded_solution, distance_callback) do
     size = tuple_size(encoded_solution)
     {move, _} =
       0..(size - 1)
@@ -59,7 +60,7 @@ defmodule TwoOpt do
             i_succ = rem((i_pred + 1), size)
             j_succ = rem((j_pred + 1), size)
 
-            gain = gain({{i_pred, i_succ}, {j_pred, j_succ}}, encoded_solution, distances)
+            gain = gain({{i_pred, i_succ}, {j_pred, j_succ}}, encoded_solution, distance_callback)
 
             if (gain > j_best_gain) do
               {{{i_pred, i_succ}, {j_pred, j_succ}}, gain}
@@ -89,20 +90,20 @@ defmodule TwoOpt do
   see `DistanceMatrix`.
 
   """
-  @spec gain({edge, edge}, list, DistanceMatrix.t) :: non_neg_integer
+  @spec gain({edge, edge}, list, distance_callback) :: non_neg_integer
 
   def gain({{i_pred,      _}, {i_pred,      _}}, _,_), do: 0
   def gain({{i_pred,      _}, {_,      i_pred}}, _,_), do: 0
-  def gain({{i_pred, i_succ}, {j_pred, j_succ}}, encoded_solution, distances) do
+  def gain({{i_pred, i_succ}, {j_pred, j_succ}}, encoded_solution, distance_callback) do
     a = elem(encoded_solution, i_pred)
     b = elem(encoded_solution, i_succ)
     c = elem(encoded_solution, j_pred)
     d = elem(encoded_solution, j_succ)
 
-    ab = distances |> DistanceMatrix.get(a, b)
-    cd = distances |> DistanceMatrix.get(c, d)
-    ac = distances |> DistanceMatrix.get(a, c)
-    bd = distances |> DistanceMatrix.get(b, d)
+    ab = distance_callback.(a, b)
+    cd = distance_callback.(c, d)
+    ac = distance_callback.(a, c)
+    bd = distance_callback.(b, d)
 
     (ab + cd) - (ac + bd)
   end
