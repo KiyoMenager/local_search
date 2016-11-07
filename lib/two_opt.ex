@@ -44,7 +44,7 @@ defmodule TwoOpt do
   def run(encoded_sol, distance_callback) do
     case encoded_sol |> two_opt(distance_callback) do
       {:halt, encoded_sol} -> encoded_sol
-      {:cont, encoded_sol} -> encoded_sol |> two_opt(distance_callback)
+      {:cont, encoded_sol} -> encoded_sol |> run(distance_callback)
     end
   end
 
