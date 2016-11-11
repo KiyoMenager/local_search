@@ -8,7 +8,6 @@ defmodule Simulation do
     %Problem{decoder: decoder, distance_matrix: distances} = Problem.new(tour)
     encoded_genes = decoder |> Decoder.encoded_solution
     distance_callback = distance(distances)
-    tot_distance_callback = tot_distance(distances)
     new_solution = LocalSearch.run(encoded_genes, distance_callback, [])
   end
 
@@ -17,7 +16,6 @@ defmodule Simulation do
     %Problem{decoder: decoder, distance_matrix: distances} = Problem.new(tour)
     encoded_genes = decoder |> Decoder.encoded_solution
     distance_callback = distance(distances)
-    tot_distance_callback = tot_distance(distances)
     new_solution = LocalSearch.run(encoded_genes, distance_callback, algo: TwoOptDelta)
   end
 
