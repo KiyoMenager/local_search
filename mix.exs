@@ -27,6 +27,8 @@ defmodule LocalSearch.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:tuple_matrix, git: "https://github.com/KiyoMenager/tuple_matrix.git"}]
+    [
+      {:csvlixir, "~> 2.0"},
+      {:tuple_matrix, git: "https://github.com/KiyoMenager/tuple_matrix.git"}]
   end
 end

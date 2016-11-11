@@ -1,1 +1,2 @@
-%{"tuple_matrix": {:git, "https://github.com/KiyoMenager/tuple_matrix.git", "e22cb371cf5b98867153d3c765035d20278ae019", []}}
+%{"csvlixir": {:hex, :csvlixir, "2.0.3", "297f4217726ef7f0645bd9b3883cdbd6193ac8fe964aeea8eeb4b3406acc46ac", [:mix], []},
+  "tuple_matrix": {:git, "https://github.com/KiyoMenager/tuple_matrix.git", "e22cb371cf5b98867153d3c765035d20278ae019", []}}

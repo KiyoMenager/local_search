@@ -11,16 +11,9 @@ defmodule LocalSearch do
     LocalSearch.run(encoded_sol, distance_callback, algo: TwoOpt)
 
   """
-  def run(encoded_sol, distance_callback, opts \\ []) do
-
+  def run(encoded_sol, distance_callback, opts) do
     {local_search, opts} = Keyword.pop(opts, :algo, @default_algorithm)
     local_search.run(encoded_sol, distance_callback)
   end
-
-  def distance_callback(distance_matrix) do
-    fn idx_pred, idx_succ ->
-      distance_matrix |> DistanceMatrix.get(idx_pred, idx_succ)
-    end
-  end
-
+  
 end
