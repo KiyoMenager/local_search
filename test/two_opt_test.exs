@@ -13,7 +13,7 @@ defmodule TwoOptTest do
     route = [Node.new(1, 2), Node.new(2, 4), Node.new(3, 2)]
     decoder          = Decoder.new(route)
     distance_matrix  = DistanceMatrix.create(route)
-    distance_callback = LocalSearch.distance_callback(distance_matrix)
+    distance_callback = distance_callback(distance_matrix)
     {:ok, %{route: route, decoder: decoder, distance_callback: distance_callback}}
   end
 
@@ -31,4 +31,9 @@ defmodule TwoOptTest do
     assert (decoder |> Decoder.decode(solution)) == route
   end
 
+  defp distance_callback(distance_matrix) do
+    fn idx_pred, idx_succ ->
+      distance_matrix |> DistanceMatrix.get(idx_pred, idx_succ)
+    end
+  end
 end
